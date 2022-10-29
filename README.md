@@ -2,8 +2,8 @@
 
 ## Set up
 ```bash
-git clone https://github.com/Dev-Elie/Safaricom-Andela.git
-cd Safaricom-Andela
+git clone https://github.com/Dev-Elie/react-test.git
+cd react-test
 npm install
 ```
 ## Run app
