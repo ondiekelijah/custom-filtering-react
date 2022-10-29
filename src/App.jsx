@@ -86,7 +86,7 @@ function App() {
     } else {
       // show all events
       setEvents(Events);
-      setToggleState(false)
+      setToggleState(false);
     }
   };
 
@@ -137,10 +137,12 @@ function App() {
 
   return (
     <div className="overflow-x-auto relative">
-      <h1 className="text-left text-3xl font-medium antialiased py-3">Events Filter</h1>
+      <h1 className="text-left text-3xl font-medium antialiased py-3">
+        Events Filter
+      </h1>
       <form
         className="flex flex-col md:flex-row md:items-center md:justify-between mb-4
-      md:space-x-4 mr-4 font-base"
+      md:space-x-4 md:mr-4 mr-0 font-base"
       >
         <div className="relative w-full">
           <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -181,8 +183,8 @@ function App() {
             md:mt-0 mt-2"
         >
           <option defaultValue>City</option>
-          {cities.map((city) => (
-            <option value={city}>{city}</option>
+          {cities.map((city, index) => (
+            <option value={city} key={index}>{city}</option>
           ))}
         </select>
 
@@ -199,8 +201,8 @@ function App() {
            md:mt-0 mt-2"
         >
           <option defaultValue>Price</option>
-          {priceRanges.map((priceRange) => (
-            <option value={priceRange.value}>{priceRange.label}</option>
+          {priceRanges.map((priceRange, index) => (
+            <option value={priceRange.value} key={index}>{priceRange.label}</option>
           ))}
         </select>
 
@@ -213,14 +215,16 @@ function App() {
             type="checkbox"
             id="default-toggle"
             className="sr-only peer toggle"
-            onClick={handleToggle}  
+            onClick={handleToggle}
           />
-          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
+          <div
+            className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
            peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer 
            dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white
             after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white 
             after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 
-            after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+            after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+          />
           <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
             Min price
           </span>
@@ -239,8 +243,6 @@ function App() {
         >
           Clear
         </button>
-
-
       </form>
 
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 shadow-sm sm:rounded-lg">
@@ -279,26 +281,31 @@ function App() {
         </thead>
         <tbody>
           {events.length > 0 ? (
-            events.filter((event) => {
-              return searchBarVal.toLowerCase() === ""
-                ? event
-                : event.city.toLowerCase().includes(searchBarVal.toLowerCase());
-            }).map((event) => (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-              key={event.id}
-              >
-                <th
-                  scope="row"
-                  className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            events
+              .filter((event) => {
+                return searchBarVal.toLowerCase() === ""
+                  ? event
+                  : event.city
+                      .toLowerCase()
+                      .includes(searchBarVal.toLowerCase());
+              })
+              .map((event) => (
+                <tr
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  key={event.id}
                 >
-                  {events.indexOf(event) + 1}
-                </th>
-                <td className="py-3 px-6">{event.id}</td>
-                <th className="py-3 px-6">{event.name}</th>
-                <td className="py-3 px-6">{event.city}</td>
-                <td className="py-3 px-6">{event.minPrice}</td>
-              </tr>
-            ))
+                  <th
+                    scope="row"
+                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {events.indexOf(event) + 1}
+                  </th>
+                  <td className="py-3 px-6">{event.id}</td>
+                  <th className="py-3 px-6">{event.name}</th>
+                  <td className="py-3 px-6">{event.city}</td>
+                  <td className="py-3 px-6">{event.minPrice}</td>
+                </tr>
+              ))
           ) : (
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
               <td className="py-3 px-6">No events found</td>
