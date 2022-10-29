@@ -134,7 +134,6 @@ function App() {
       <form
         className="flex flex-col md:flex-row md:items-center md:justify-between mb-4
       md:space-x-4"
-        onSubmit={handleFilters}
       >
         <div className="relative w-full">
           <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -165,6 +164,7 @@ function App() {
           id="countries"
           value={dropCityVal}
           onChange={(e) => setDropCityVal(e.target.value)}
+          onClick={handleFilters}
           className="bg-gray-50 border border-gray-300 
           text-gray-900 text-sm rounded-lg focus:ring-blue-500
            focus:border-blue-500 block 
@@ -183,6 +183,7 @@ function App() {
           id="prices"
           value={dropPriceVal}
           onChange={(e) => setDropPriceVal(e.target.value)}
+          onClick={handleFilters}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
           focus:border-blue-500 block 
           md:w-[20%] w-[full] p-2.5 dark:bg-gray-700 
@@ -214,27 +215,14 @@ function App() {
         <button
           type="button"
           onClick={handleReset}
-          className="text-white bg-gray-800 
-          hover:bg-gray-900 focus:outline-none focus:ring-4 
-          focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2
-          dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700
-           dark:border-gray-700
-           md:w-[15%] w-[full] md:mt-0 mt-2
-           "
+          className="py-2 px-3 text-sm font-medium
+          text-white bg-blue-700 rounded-lg border
+           border-blue-700 hover:bg-blue-800 focus:ring-4 
+           focus:outline-none focus:ring-blue-300 dark:bg-blue-600 
+           dark:hover:bg-blue-700 dark:focus:ring-blue-800
+           md:w-[15%] w-[full] md:mt-0 mt-2"
         >
           Clear
-        </button>
-
-        <button
-          type="submit"
-          className="py-2 px-3 text-sm font-medium
-           text-white bg-blue-700 rounded-lg border
-            border-blue-700 hover:bg-blue-800 focus:ring-4 
-            focus:outline-none focus:ring-blue-300 dark:bg-blue-600 
-            dark:hover:bg-blue-700 dark:focus:ring-blue-800
-            md:w-[15%] w-[full] md:mt-0 mt-2"
-        >
-          Search
         </button>
       </form>
 
@@ -274,8 +262,14 @@ function App() {
         </thead>
         <tbody>
           {events.length > 0 ? (
-            events.map((event) => (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            events.filter((event) => {
+              return searchBarVal.toLowerCase() === ""
+                ? event
+                : event.city.toLowerCase().includes(searchBarVal.toLowerCase());
+            }).map((event) => (
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+              key={event.id}
+              >
                 <th
                   scope="row"
                   className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
