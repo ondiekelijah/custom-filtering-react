@@ -22,13 +22,15 @@ function App() {
     { value: "200-500", label: "$200 - $500" },
   ];
 
+  // UseEffect to fetch the events from the json file
   useEffect(() => {
     setEvents(Events);
   }, []);
 
+  // Function to handle the custom filters
   const handleFilters = (e) => {
     e.preventDefault();
-    // Add a new filter to filter with city name and price range, if searchBarVal is empty, use dropCityVal and dropPriceVal
+    // Filter to filter with city name and price range, if searchBarVal is empty, use dropCityVal and dropPriceVal
     let filteredEvents = Events.filter((event) => {
       const [min, max] = dropPriceVal.split("-");
 
@@ -88,6 +90,7 @@ function App() {
     }
   };
 
+  // Reset all filters and show all events
   const handleReset = () => {
     setEvents(Events);
     setSearchBarVal("");
@@ -96,6 +99,7 @@ function App() {
     // setToggleState(true);
   };
 
+  // Sorting
   const handleCityOrder = (col) => {
     if (order === "asc") {
       const sortedEvents = [...events].sort((a, b) =>
