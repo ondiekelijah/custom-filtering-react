@@ -137,10 +137,10 @@ function App() {
 
   return (
     <div className="overflow-x-auto relative">
-      <h1 className="text-left font-sans text-3xl font-medium antialiased py-3">Events Filter</h1>
+      <h1 className="text-left text-3xl font-medium antialiased py-3">Events Filter</h1>
       <form
         className="flex flex-col md:flex-row md:items-center md:justify-between mb-4
-      md:space-x-4"
+      md:space-x-4 mr-4 font-base"
       >
         <div className="relative w-full">
           <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -206,7 +206,8 @@ function App() {
 
         <label
           htmlFor="default-toggle"
-          className="inline-flex relative content-center cursor-pointer md:w-[25%] w-[full] md:mt-0 mt-2"
+          className="inline-flex relative content-center cursor-pointer 
+          md:w-[25%] w-[full] md:mt-0 mt-2"
         >
           <input
             type="checkbox"
@@ -214,23 +215,32 @@ function App() {
             className="sr-only peer toggle"
             onClick={handleToggle}  
           />
-          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
+           peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer 
+           dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white
+            after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white 
+            after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 
+            after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
           <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-            minPrice
+            Min price
           </span>
         </label>
+
         <button
           type="button"
           onClick={handleReset}
-          className="py-2 px-3 text-sm font-medium
-          text-white bg-blue-700 rounded-lg border
+          className="py-2 text-sm font-medium
+          text-white bg-blue-700 rounded-full border
            border-blue-700 hover:bg-blue-800 focus:ring-4 
            focus:outline-none focus:ring-blue-300 dark:bg-blue-600 
            dark:hover:bg-blue-700 dark:focus:ring-blue-800
-           md:w-[15%] w-[full] md:mt-0 mt-2"
+           md:w-[15%] w-[full] md:mt-0 mt-2
+           "
         >
           Clear
         </button>
+
+
       </form>
 
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 shadow-sm sm:rounded-lg">
