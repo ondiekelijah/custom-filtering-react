@@ -1,4 +1,4 @@
-# Safaricom-Andela React assesment
+# React assesment
 
 ## Set up
 ```bash
@@ -10,4 +10,3 @@ npm install
 ```bash
 npm run dev
 ```
-![example](https://github.com/Dev-Elie/Safaricom-Andela/blob/main/example.png)
