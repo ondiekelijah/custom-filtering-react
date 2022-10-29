@@ -5,10 +5,11 @@ import "./App.css";
 
 function App() {
   const [events, setEvents] = useState([]);
-  const [value, setValue] = useState("");
+  const [searchBarVal, setSearchBarVal] = useState("");
   const [order, setOrder] = useState("asc");
-  // const [citySortValue, setCitySortValue] = useState("");
-  const [ toggleState, setToggleState ] = useState(true);
+  const [toggleState, setToggleState] = useState(true);
+  const [dropCityVal, setDropCityVal] = useState("");
+  const [dropPriceVal, setDropPriceVal] = useState("");
 
   // find all cities for the select
   const cities = [...new Set(Events.map((event) => event.city))];
@@ -21,74 +22,76 @@ function App() {
     { value: "200-500", label: "$200 - $500" },
   ];
 
-  // Check and display the event whose price is lowest
-
   useEffect(() => {
     setEvents(Events);
   }, []);
 
-  // 1- Handle search via search bar
-  const handleSearch1 = (e) => {
+  const handleFilters = (e) => {
     e.preventDefault();
-    // Return all events whose city name match the search value or is like the search value
-    const filteredEvents = Events.filter((event) =>
-      event.city.toLowerCase().includes(value.toLowerCase())
-    );
+    // Add a new filter to filter with city name and price range, if searchBarVal is empty, use dropCityVal and dropPriceVal
+    let filteredEvents = Events.filter((event) => {
+      const [min, max] = dropPriceVal.split("-");
 
-    setEvents(filteredEvents);
-  };
+      if (searchBarVal === "" && dropPriceVal !== "") {
+        return (
+          event.city.toLowerCase().includes(dropCityVal.toLowerCase()) &&
+          event.minPrice >= min &&
+          event.minPrice <= max
+        );
+      }
 
-  // 2- Handle search via select(City)
-  const handleSearch2 = (e) => {
-    e.preventDefault();
-
-    let value = e.target.value;
-
-    // show only the events whose city name matches the selected value
-    const filteredEvents = Events.filter((event) => event.city === value);
-    setEvents(filteredEvents);
-  };
-
-  // 3. Handle search via select(Price)
-  const handleSearch3 = (e) => {
-    e.preventDefault();
-
-    let value = e.target.value;
-
-    console.log(value);
-
-    // Check show all events whose min price is within the selected price range
-    const filteredEvents = Events.filter((event) => {
-      const [min, max] = value.split("-");
-      return event.minPrice >= min && event.minPrice <= max;
+      if (searchBarVal !== "" && dropPriceVal !== "") {
+        return (
+          event.city.toLowerCase().includes(searchBarVal.toLowerCase()) &&
+          event.minPrice >= min &&
+          event.minPrice <= max
+        );
+      }
+      // if dropCityVal is not empty
+      if (dropCityVal !== "") {
+        return event.city.toLowerCase().includes(dropCityVal.toLowerCase());
+      }
+      // if searchBarVal is not empty
+      if (searchBarVal !== "") {
+        return event.city.toLowerCase().includes(searchBarVal.toLowerCase());
+      }
+      // if all filters are empty, return all events
+      if (searchBarVal === "" && dropCityVal === "" && dropPriceVal === "") {
+        return event;
+      }
+      // If searchBarVal is not empty, use searchBarVal and dropPriceVal
+      return (
+        event.city.toLowerCase().includes(searchBarVal.toLowerCase()) &&
+        event.minPrice >= min &&
+        event.minPrice <= max
+      );
     });
 
     setEvents(filteredEvents);
-
-    // setEvents(filteredEvents);
   };
 
-  // 4. Handle search via toggle
+  // Handle search via toggle
   const handleToggle = (e) => {
     if (toggleState === true) {
       // show all events with the lowest price out of all the events
       const filteredEvents = Events.filter((event) => {
-        return event.minPrice === Math.min(...Events.map((event) => event.minPrice));
-      }
-      );
+        return (
+          event.minPrice === Math.min(...Events.map((event) => event.minPrice))
+        );
+      });
       setEvents(filteredEvents);
       setToggleState(false);
     } else {
       setEvents(Events);
       setToggleState(true);
     }
-
   };
-
 
   const handleReset = () => {
     setEvents(Events);
-    setValue("");
+    setSearchBarVal("");
+    setDropCityVal("");
+    setDropPriceVal("");
   };
 
   const handleCityOrder = (col) => {
@@ -128,7 +131,7 @@ function App() {
       <form
         className="flex flex-col md:flex-row md:items-center md:justify-between mb-4
       md:space-x-4"
-        onSubmit={handleSearch1}
+        onSubmit={handleFilters}
       >
         <div className="relative w-full">
           <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -151,15 +154,15 @@ function App() {
             id="voice-search"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-[9px]  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search by city ..."
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
+            value={searchBarVal}
+            onChange={(e) => setSearchBarVal(e.target.value)}
           />
         </div>
         <select
           id="countries"
-          value={value}
-          onChange={handleSearch2}
-          class="bg-gray-50 border border-gray-300 
+          value={dropCityVal}
+          onChange={(e) => setDropCityVal(e.target.value)}
+          className="bg-gray-50 border border-gray-300 
           text-gray-900 text-sm rounded-lg focus:ring-blue-500
            focus:border-blue-500 block 
            md:w-[20%] w-[full] p-2.5 dark:bg-gray-700 
@@ -169,16 +172,15 @@ function App() {
         >
           <option defaultValue>City</option>
           {cities.map((city) => (
-            <option value={city} 
-            >{city}</option>
+            <option value={city}>{city}</option>
           ))}
         </select>
 
         <select
-          id="countries"
-          value={value}
-          onChange={handleSearch3}
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
+          id="prices"
+          value={dropPriceVal}
+          onChange={(e) => setDropPriceVal(e.target.value)}
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
           focus:border-blue-500 block 
           md:w-[20%] w-[full] p-2.5 dark:bg-gray-700 
           dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
@@ -186,7 +188,6 @@ function App() {
            md:mt-0 mt-2"
         >
           <option defaultValue>Price</option>
-          {/* Loop thro the price ranges and show labels and values */}
           {priceRanges.map((priceRange) => (
             <option value={priceRange.value}>{priceRange.label}</option>
           ))}
@@ -197,33 +198,27 @@ function App() {
           className="inline-flex relative content-center cursor-pointer md:w-[25%] w-[full] md:mt-0 mt-2"
         >
           <input
-
             type="checkbox"
             defaultValue
             id="default-toggle"
             className="sr-only peer"
-            // Toggle state to previous state
             onClick={handleToggle}
-            // onChange={handleMinPricedEvent}
-    
-
           />
           <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
           <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-          minPrice
+            minPrice
           </span>
         </label>
         <button
           type="button"
           onClick={handleReset}
-          class="text-white bg-gray-800 
+          className="text-white bg-gray-800 
           hover:bg-gray-900 focus:outline-none focus:ring-4 
           focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2
           dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700
            dark:border-gray-700
            md:w-[15%] w-[full] md:mt-0 mt-2
            "
-
         >
           Clear
         </button>
@@ -235,9 +230,7 @@ function App() {
             border-blue-700 hover:bg-blue-800 focus:ring-4 
             focus:outline-none focus:ring-blue-300 dark:bg-blue-600 
             dark:hover:bg-blue-700 dark:focus:ring-blue-800
-            md:w-[15%] w-[full] md:mt-0 mt-2
-
-            "
+            md:w-[15%] w-[full] md:mt-0 mt-2"
         >
           Search
         </button>
