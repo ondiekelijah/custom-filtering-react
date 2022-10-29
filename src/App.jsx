@@ -130,6 +130,7 @@ function App() {
 
   return (
     <div className="overflow-x-auto relative">
+      <h1 className="text-left font-sans text-3xl font-medium antialiased py-3">Events Filter</h1>
       <form
         className="flex flex-col md:flex-row md:items-center md:justify-between mb-4
       md:space-x-4"
