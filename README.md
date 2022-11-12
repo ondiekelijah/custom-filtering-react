@@ -1,4 +1,4 @@
-# React assesment
+# React Custom Filters
 
 ## Set up
 ```bash
