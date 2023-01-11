@@ -1,18 +1,20 @@
-import { useState, useEffect } from "react";
+import React,{useState} from "react";
 import "boxicons";
 import Events from "./events.json";
 import "./App.css";
+// import { IEvent } from "./types/Event";
 
-function App() {
-  const [events, setEvents] = useState([]);
-  const [searchBarVal, setSearchBarVal] = useState("");
+
+function App () {
+  const [events, setEvents] = useState<any>([]);
+  const [searchBarVal, setSearchBarVal] = useState<string>("");
   const [order, setOrder] = useState("asc");
-  const [toggleState, setToggleState] = useState(false);
-  const [dropCityVal, setDropCityVal] = useState("");
-  const [dropPriceVal, setDropPriceVal] = useState("");
+  const [toggleState, setToggleState] = useState<boolean>(false);
+  const [dropCityVal, setDropCityVal] = useState<string>("");
+  const [dropPriceVal, setDropPriceVal] = useState<string>("");
 
   // find all cities for the select menu
-  const cities = [...new Set(Events.map((event) => event.city))];
+  const cities = [...new Set(Events.map((event: { city: any; }) => event.city))];
 
   // Values for display to show the price ranges, example $0 - $20 uniformly
   const priceRanges = [
@@ -23,15 +25,13 @@ function App() {
   ];
 
   // UseEffect to fetch the events from the json file
-  useEffect(() => {
-    setEvents(Events);
-  }, []);
+  React.useEffect(() => setEvents(Events), []);
 
   // Function to handle the custom filters
-  const handleFilters = (e) => {
+  const handleFilters = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     // Filter to filter with city name and price range, if searchBarVal is empty, use dropCityVal and dropPriceVal
-    let filteredEvents = Events.filter((event) => {
+    let filteredEvents = Events.filter((event:any) => {
       const [min, max] = dropPriceVal.split("-");
 
       if (searchBarVal === "" && dropPriceVal !== "") {
@@ -73,12 +73,12 @@ function App() {
   };
 
   // Handle search via toggle
-  const handleToggle = (e) => {
+  const handleToggle = (e: any) => {
     if (toggleState === false) {
       // show all events with the lowest price out of all the events
-      const filteredEvents = Events.filter((event) => {
+      const filteredEvents = Events.filter((event: { minPrice: number; }) => {
         return (
-          event.minPrice === Math.min(...Events.map((event) => event.minPrice))
+          event.minPrice === Math.min(...Events.map((event: { minPrice: any; }) => event.minPrice))
         );
       });
       setEvents(filteredEvents);
@@ -93,17 +93,17 @@ function App() {
   // Reset all filters and show all events
   const handleReset = () => {
     setEvents(Events);
-    setSearchBarVal("");
+    setSearchBarVal("")
     setDropCityVal("");
     setDropPriceVal("");
     // get toggle by classname and uncheck it
-    const toggle = document.querySelector(".toggle");
+    const toggle:any = document.querySelector(".toggle");
     toggle.checked = false;
     setToggleState(false);
   };
 
   // Sorting
-  const handleCityOrder = (col) => {
+  const handleCityOrder = (col: string) => {
     if (order === "asc") {
       const sortedEvents = [...events].sort((a, b) =>
         a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
@@ -121,7 +121,7 @@ function App() {
     }
   };
 
-  const handlePriceOrder = (col) => {
+  const handlePriceOrder = (col: string) => {
     if (order === "asc") {
       const sortedEvents = [...events].sort((a, b) => a[col] - b[col]);
       setEvents(sortedEvents);
@@ -166,13 +166,13 @@ function App() {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-[9px]  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search by city ..."
             value={searchBarVal}
-            onChange={(e) => setSearchBarVal(e.target.value)}
+            onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setSearchBarVal(e.target.value)}
           />
         </div>
         <select
           id="countries"
           value={dropCityVal}
-          onChange={(e) => setDropCityVal(e.target.value)}
+          onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setDropCityVal(e.target.value)}
           onClick={handleFilters}
           className="bg-gray-50 border border-gray-300 
           text-gray-900 text-sm rounded-lg focus:ring-blue-500
@@ -182,7 +182,7 @@ function App() {
            dark:focus:ring-blue-500 dark:focus:border-blue-500
             md:mt-0 mt-2"
         >
-          <option defaultValue>City</option>
+          <option defaultValue="City">City</option>
           {cities.map((city, index) => (
             <option value={city} key={index}>{city}</option>
           ))}
@@ -191,7 +191,7 @@ function App() {
         <select
           id="prices"
           value={dropPriceVal}
-          onChange={(e) => setDropPriceVal(e.target.value)}
+          onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setDropPriceVal(e.target.value)}
           onClick={handleFilters}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
           focus:border-blue-500 block 
@@ -200,7 +200,7 @@ function App() {
           dark:focus:ring-blue-500 dark:focus:border-blue-500
            md:mt-0 mt-2"
         >
-          <option defaultValue>Price</option>
+          <option defaultValue="price">Price</option>
           {priceRanges.map((priceRange, index) => (
             <option value={priceRange.value} key={index}>{priceRange.label}</option>
           ))}
@@ -262,6 +262,7 @@ function App() {
                   className="mr-2 cursor-pointer"
                   onClick={() => handleCityOrder("city")}
                 >
+                  {/*@ts-ignore */}
                   <box-icon name="sort-alt-2"></box-icon>
                 </span>
               </div>
@@ -273,6 +274,7 @@ function App() {
                   className="mr-2 cursor-pointer"
                   onClick={() => handlePriceOrder("minPrice")}
                 >
+                  {/*@ts-ignore */}
                   <box-icon name="sort-alt-2"></box-icon>
                 </span>
               </div>
@@ -282,14 +284,14 @@ function App() {
         <tbody>
           {events.length > 0 ? (
             events
-              .filter((event) => {
+              .filter((event: { city: string; }) => {
                 return searchBarVal.toLowerCase() === ""
                   ? event
                   : event.city
-                      .toLowerCase()
+                       .toLowerCase()
                       .includes(searchBarVal.toLowerCase());
               })
-              .map((event) => (
+              .map((event: { id: any; name: any; city: any; minPrice: any; }) => (
                 <tr
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                   key={event.id}
@@ -318,3 +320,8 @@ function App() {
 }
 
 export default App;
+
+export function useEffect(arg0: () => void, arg1: never[]) {
+  throw new Error("Function not implemented.");
+}
+
